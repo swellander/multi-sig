@@ -24,6 +24,14 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     waitConfirmations: 5,
   });
 
+  await deploy("MultiSigWallet", {
+    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+    from: deployer,
+    args: [ ['0xd9f96E9bDb294Fc0819e88fc51FE3C7907173493'], 1 ],
+    log: true,
+    waitConfirmations: 5,
+  });
+
 
   // Getting a previously deployed contract
   const MultiSigWalletFactory = await ethers.getContract("MultiSigWalletFactory", deployer);

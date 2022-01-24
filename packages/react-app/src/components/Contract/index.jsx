@@ -67,7 +67,8 @@ export default function Contract({
   }
 
   const address = contract ? contract.address : "";
-  const contractIsDeployed = useContractExistsAtAddress(provider, address);
+  // const contractIsDeployed = useContractExistsAtAddress(provider, address);
+  const contractIsDeployed = true;
 
   const displayedContractFunctions = useMemo(() => {
     const results = contract
@@ -116,30 +117,29 @@ export default function Contract({
   });
 
   return (
-    <h1>ANYTHING</h1>
-    // <div style={{ margin: "auto", width: "70vw" }}>
-    //   <Card
-    //     title={
-    //       <div style={{fontSize:24}}>
-    //         {name}
-    //         <div style={{ float: "right" }}>
-    //           <Address value={address}/>             
-    //         </div>
-    //         <div style={{ float: "right", marginRight: 25 }}>
-    //           <Balance
-    //               address={address}
-    //               provider={provider}
-    //               price={price}
-    //             />
-    //         </div>
-    //       </div>
-    //     }
-    //     size="large"
-    //     style={{ marginTop: 25, width: "100%" }}
-    //     loading={contractDisplay && contractDisplay.length <= 0}
-    //   >
-    //     {contractIsDeployed ? contractDisplay : noContractDisplay}
-    //   </Card>
-    // </div>
+    <div style={{ margin: "auto", width: "70vw" }}>
+      <Card
+        title={
+          <div style={{fontSize:24}}>
+            {name}
+            <div style={{ float: "right" }}>
+              <Address value={address}/>             
+            </div>
+            <div style={{ float: "right", marginRight: 25 }}>
+              <Balance
+                  address={address}
+                  provider={provider}
+                  price={price}
+                />
+            </div>
+          </div>
+        }
+        size="large"
+        style={{ marginTop: 25, width: "100%" }}
+        loading={contractDisplay && contractDisplay.length <= 0}
+      >
+        {contractIsDeployed ? contractDisplay : noContractDisplay}
+      </Card>
+    </div>
   );
 }

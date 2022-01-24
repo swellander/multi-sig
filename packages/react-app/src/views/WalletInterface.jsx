@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useContractLoader } from 'eth-hooks';
-import Contract from '../component/Contract';
+import Contract from '../components/Contract';
 
-export default ({ userSigner, contractConfig, localChainId, writeContracts }) => {
+export default ({ userSigner, contractConfig, localChainId, localProvider, gasPrice }) => {
   const { address } = useParams();
   const customAddresses = { MultiSigWallet: address };
   const config = { ...contractConfig, customAddresses };
@@ -12,8 +12,7 @@ export default ({ userSigner, contractConfig, localChainId, writeContracts }) =>
   return (
     <>
       <h3>Wallet Interface for {address}</h3>
-      <h2>WHERE is ITTT</h2>
-      <Contract customContract={MultiSigWallet} />
+      <Contract signer={userSigner} customContract={MultiSigWallet} provider={localProvider} gasPrice={gasPrice}/>
     </>
   )
 }

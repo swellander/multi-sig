@@ -268,6 +268,8 @@ function App(props) {
         </Route>
         <Route path="/wallet/:address">
           <WalletInterface
+            gasPrice={gasPrice}
+            localProvider={localProvider}
             writeContracts={writeContracts}
             localChainId={localChainId}
             contractConfig={contractConfig}
