@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, TextField, Button, Chip } from '@mui/material';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+// import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import Address from '../components/Address';
 import { useHistory } from 'react-router-dom';
 
@@ -35,7 +35,7 @@ function Home({ readContracts, writeContracts }) {
         {wallets.map(wallet => (
           <Grid xs={12}>
             <Chip
-              icon={<AccountBalanceWalletIcon/>}
+              // icon={<AccountBalanceWalletIcon/>}
               label={wallet}
               onClick={() => handleClickWallet(wallet)}
             />

@@ -95,8 +95,6 @@ function NetworkDisplay({
     );
   }
 
-  console.log({ networkDisplay });
-
   return networkDisplay;
 }
 

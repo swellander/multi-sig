@@ -268,6 +268,10 @@ function App(props) {
         </Route>
         <Route path="/wallet/:address">
           <WalletInterface
+            writeContracts={writeContracts}
+            localChainId={localChainId}
+            contractConfig={contractConfig}
+            userSigner={userSigner}
           />
         </Route>
       </Switch>
