@@ -4,6 +4,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 contract MultiSigWalletFactory {
     MultiSigWallet[] public wallets;
+    event WalletCreated();
 
     function getWallets() public view returns (MultiSigWallet[] memory) {
         return wallets;
@@ -17,6 +18,7 @@ contract MultiSigWalletFactory {
             _numConfirmationsRequired
         );
         wallets.push(wallet);
+        emit WalletCreated();
     }
 }
 
