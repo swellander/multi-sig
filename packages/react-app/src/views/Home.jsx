@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { utils } from 'ethers';
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import styled from "styled-components";
 import Address from "../components/Address";
@@ -32,7 +33,7 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
   const [numConfirmations, setNumConfirmations] = useState();
 
   const createBtnIsDisabled = !numConfirmations || !owners.length;
-  const addOwnerBtnIsDisabled = !newOwner || owners.includes(newOwner);
+  const addOwnerBtnIsDisabled = !newOwner || owners.includes(newOwner) || !utils.isAddress(newOwner);
 
   const handleAddOwner = () => {
     setOwners([...owners, newOwner]);
@@ -44,8 +45,14 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
     setOwners(newOwnerArr);
   }
   const handleCreateContract = async () => {
-    const txData = await tx(writeContracts.MultiSigWalletFactory.create(owners, numConfirmations));
-    console.log({ txData });
+    try {
+      await tx(writeContracts.MultiSigWalletFactory.create(owners, numConfirmations));
+      setNumConfirmations();
+      setNewOwner([]);
+      setOwners([]);
+    } catch(e) {
+      console.error(e)
+    }
   };
   const handleClickWallet = walletAddress => history.push("/wallet/" + walletAddress);
 
@@ -55,7 +62,7 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
     const existingWallets = await readContracts.MultiSigWalletFactory?.getWallets();
     setWallets(existingWallets || []);
   }, [MultiSigWalletFactory, walletCreatedEvents]);
-
+  console.log(numConfirmations);
   return (
     <PadGrid container justifyContent="space-around">
       <PadGrid xs={6} container justifyContent="space-between">
@@ -77,7 +84,7 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
             <TextField
               label="Confirmations"
               type="number"
-              value={numConfirmations}
+              value={numConfirmations || ''}
               onChange={e => setNumConfirmations(e.target.value)}
             />
           </FormItem>
