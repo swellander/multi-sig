@@ -1,18 +1,13 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useContractLoader } from 'eth-hooks';
-import Contract from '../components/Contract';
+import React from "react";
+import { useParams } from "react-router-dom";
+import { useContractLoader } from "eth-hooks";
+import Contract from "../components/Contract";
 
 export default ({ userSigner, contractConfig, localChainId, localProvider, gasPrice }) => {
   const { address } = useParams();
   const customAddresses = { MultiSigWallet: address };
   const config = { ...contractConfig, customAddresses };
-  
+
   const { MultiSigWallet } = useContractLoader(userSigner, config, localChainId);
-  return (
-    <>
-      <h3>Wallet Interface for {address}</h3>
-      <Contract signer={userSigner} customContract={MultiSigWallet} provider={localProvider} gasPrice={gasPrice}/>
-    </>
-  )
-}
+  return <Contract signer={userSigner} customContract={MultiSigWallet} provider={localProvider} gasPrice={gasPrice} />;
+};

@@ -1,4 +1,7 @@
 import { Card } from "antd";
+import { useHistory } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
 import React, { useMemo, useState } from "react";
 import { useContractExistsAtAddress, useContractLoader } from "eth-hooks";
 import Account from "../Account";
@@ -116,26 +119,29 @@ export default function Contract({
     return null;
   });
 
+  const history = useHistory();
+
   return (
-    <div style={{ margin: "auto", width: "70vw" }}>
+    <div style={{ margin: "auto", width: "90vw", overflow: "none" }}>
       <Card
         title={
-          <div style={{fontSize:24}}>
+          <div style={{ fontSize: 24 }}>
             {name}
+            <div style={{ float: "left" }}>
+              <IconButton onClick={() => history.push("/")}>
+                <ArrowBackIcon />
+              </IconButton>
+            </div>
             <div style={{ float: "right" }}>
-              <Address value={address}/>             
+              <Address value={address} />
             </div>
             <div style={{ float: "right", marginRight: 25 }}>
-              <Balance
-                  address={address}
-                  provider={provider}
-                  price={price}
-                />
+              <Balance address={address} provider={provider} price={price} />
             </div>
           </div>
         }
         size="large"
-        style={{ marginTop: 25, width: "100%" }}
+        style={{ marginTop: 25 }}
         loading={contractDisplay && contractDisplay.length <= 0}
       >
         {contractIsDeployed ? contractDisplay : noContractDisplay}

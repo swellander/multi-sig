@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { utils } from 'ethers';
+import { utils } from "ethers";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import styled from "styled-components";
 import Address from "../components/Address";
@@ -8,7 +8,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 const PadGrid = styled(Grid)`
   padding: 20px;
@@ -40,23 +40,29 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
     setNewOwner("");
   };
 
-  const removeOwner = (ownerToRemove) => {
+  const removeOwner = ownerToRemove => {
     const newOwnerArr = owners.filter(owner => owner !== ownerToRemove);
     setOwners(newOwnerArr);
-  }
+  };
   const handleCreateContract = async () => {
     try {
       await tx(writeContracts.MultiSigWalletFactory.create(owners, numConfirmations));
       setNumConfirmations();
       setNewOwner([]);
       setOwners([]);
-    } catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
     }
   };
   const handleClickWallet = walletAddress => history.push("/wallet/" + walletAddress);
 
-  const walletCreatedEvents = useEventListener(readContracts, 'MultiSigWalletFactory', 'WalletCreated', localProvider, 1);
+  const walletCreatedEvents = useEventListener(
+    readContracts,
+    "MultiSigWalletFactory",
+    "WalletCreated",
+    localProvider,
+    1,
+  );
 
   useEffect(async () => {
     const existingWallets = await readContracts.MultiSigWalletFactory?.getWallets();
@@ -65,7 +71,7 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
   console.log(numConfirmations);
   return (
     <PadGrid container justifyContent="space-around">
-      <PadGrid xs={6} container justifyContent="space-between">
+      <PadGrid xs={7} container justifyContent="space-between">
         <PadGrid xs={12} container justifyContent="flex-start">
           <h3>Create New Multi-Sig Wallet</h3>
         </PadGrid>
@@ -84,7 +90,7 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
             <TextField
               label="Confirmations"
               type="number"
-              value={numConfirmations || ''}
+              value={numConfirmations || ""}
               onChange={e => setNumConfirmations(e.target.value)}
             />
           </FormItem>
@@ -96,14 +102,14 @@ function Home({ readContracts, writeContracts, localProvider, tx }) {
         </Grid>
         <Grid xs={9} style={{ overflow: "scroll", margin: 10, height: "40vh" }}>
           {owners.map(owner => (
-            <Grid xs={12} container justifyContent="flex-start" style={{ marginBottom: 10 }}>
+            <Grid xs={12} container justifyContent="space-around" style={{ marginBottom: 10 }}>
               <Grid xs={11} container alignContent="center">
-              <Address fontSize={16} address={owner} size="long" />
-              </Grid>
-              <Grid xs={1} container alignContent="center">
-              <IconButton onClick={handleAddOwner} onClick={() => removeOwner(owner)}>
-                <HighlightOffIcon fontSize="small" />
-              </IconButton>
+                <Address fontSize={16} address={owner} size="long" />
+                <Grid xs={1} container alignContent="flex-start" style={{ marginTop: -5 }}>
+                  <IconButton onClick={handleAddOwner} onClick={() => removeOwner(owner)}>
+                    <HighlightOffIcon fontSize="small" />
+                  </IconButton>
+                </Grid>
               </Grid>
             </Grid>
           ))}
