@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useEventListener } from "eth-hooks/events/useEventListener";
 import styled from "styled-components";
 import Address from "../components/Address";
 import { Grid, TextField, Button, Chip } from "@mui/material";
@@ -22,7 +23,7 @@ const AddressChip = styled(Chip)`
   }
 `;
 
-function Home({ readContracts, writeContracts }) {
+function Home({ readContracts, writeContracts, localProvider, tx }) {
   const history = useHistory();
   const { MultiSigWalletFactory } = readContracts;
   const [wallets, setWallets] = useState([]);
@@ -43,15 +44,17 @@ function Home({ readContracts, writeContracts }) {
     setOwners(newOwnerArr);
   }
   const handleCreateContract = async () => {
-    const txData = await writeContracts.MultiSigWalletFactory.create(owners, numConfirmations);
+    const txData = await tx(writeContracts.MultiSigWalletFactory.create(owners, numConfirmations));
     console.log({ txData });
   };
   const handleClickWallet = walletAddress => history.push("/wallet/" + walletAddress);
 
+  const walletCreatedEvents = useEventListener(readContracts, 'MultiSigWalletFactory', 'WalletCreated', localProvider, 1);
+
   useEffect(async () => {
     const existingWallets = await readContracts.MultiSigWalletFactory?.getWallets();
     setWallets(existingWallets || []);
-  }, [MultiSigWalletFactory]);
+  }, [MultiSigWalletFactory, walletCreatedEvents]);
 
   return (
     <PadGrid container justifyContent="space-around">
