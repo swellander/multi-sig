@@ -6,6 +6,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { useHistory } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const PadGrid = styled(Grid)`
   padding: 20px;
@@ -30,11 +31,17 @@ function Home({ readContracts, writeContracts }) {
   const [numConfirmations, setNumConfirmations] = useState();
 
   const createBtnIsDisabled = !numConfirmations || !owners.length;
+  const addOwnerBtnIsDisabled = !newOwner || owners.includes(newOwner);
 
   const handleAddOwner = () => {
     setOwners([...owners, newOwner]);
     setNewOwner("");
   };
+
+  const removeOwner = (ownerToRemove) => {
+    const newOwnerArr = owners.filter(owner => owner !== ownerToRemove);
+    setOwners(newOwnerArr);
+  }
   const handleCreateContract = async () => {
     const txData = await writeContracts.MultiSigWalletFactory.create(owners, numConfirmations);
     console.log({ txData });
@@ -48,21 +55,21 @@ function Home({ readContracts, writeContracts }) {
 
   return (
     <PadGrid container justifyContent="space-around">
-      <PadGrid xs={7} container>
-        <PadGrid xs={12} container justifyContent="flex-start" >
+      <PadGrid xs={6} container justifyContent="space-between">
+        <PadGrid xs={12} container justifyContent="flex-start">
           <h3>Create New Multi-Sig Wallet</h3>
         </PadGrid>
         <FormItem xs={12} container justifyContent="flex-start">
           <Grid container xs={11}>
-            <TextField fullWidth label="Contract Owner" value={newOwner} onChange={e => setNewOwner(e.target.value)} />
+            <TextField fullWidth label="Add Owner" value={newOwner} onChange={e => setNewOwner(e.target.value)} />
           </Grid>
           <Grid xs={1}>
-            <IconButton onClick={handleAddOwner}>
+            <IconButton onClick={handleAddOwner} disabled={addOwnerBtnIsDisabled}>
               <AddCircleIcon fontSize="large" />
             </IconButton>
           </Grid>
         </FormItem>
-        <Grid xs={4}>
+        <Grid xs={2}>
           <FormItem xs={12} container justifyContent="flex-start">
             <TextField
               label="Confirmations"
@@ -73,14 +80,21 @@ function Home({ readContracts, writeContracts }) {
           </FormItem>
           <FormItem xs={12} container justifyContent="flex-start">
             <Button variant="contained" onClick={handleCreateContract} disabled={createBtnIsDisabled}>
-              Create Contract
+              Create
             </Button>
           </FormItem>
         </Grid>
-        <Grid xs={7} style={{ overflow: "scroll", margin: 10, height: '40vh'}}>
+        <Grid xs={9} style={{ overflow: "scroll", margin: 10, height: "40vh" }}>
           {owners.map(owner => (
-            <Grid xs={12} container justifyContent="flex-start" style={{marginBottom: 10}}>
+            <Grid xs={12} container justifyContent="flex-start" style={{ marginBottom: 10 }}>
+              <Grid xs={11} container alignContent="center">
               <Address fontSize={16} address={owner} size="long" />
+              </Grid>
+              <Grid xs={1} container alignContent="center">
+              <IconButton onClick={handleAddOwner} onClick={() => removeOwner(owner)}>
+                <HighlightOffIcon fontSize="small" />
+              </IconButton>
+              </Grid>
             </Grid>
           ))}
         </Grid>
